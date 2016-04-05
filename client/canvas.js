@@ -1,14 +1,21 @@
+import { myPlayerId } from './player'
+
 Template.body.helpers({
-	me: {x: 10, y: 0, radius: 10},
+	me() {
+		return Players.findOne(myPlayerId.get())
+	},
 
 	food: function() {
         return Food.find()
     },
 
-	otherPlayers: [
-		{x: 9, y: -150, radius: 12},
-		{x: 130, y: 30, radius: 20}
-	],
+	otherPlayers() {
+		return Players.find({_id: {$not: myPlayerId.get()} })
+	},
+
+	radiusFor(player) {
+		return 10 + player.points
+	},
 
 	invert(number) {return -number}
 })

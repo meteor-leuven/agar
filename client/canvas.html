@@ -10,11 +10,12 @@
 		{{/each}}
 
 		{{#each otherPlayers}}
-		    <circle cx={{x}} cy={{y}} r={{radius}} fill=darkViolet></circle>
+		    <circle cx={{x}} cy={{y}} r={{radiusFor this}} fill=darkViolet></circle>
 		{{/each}}
 	</g>
 
-	{{! Myself}}
-	<circle cx=0 cy=0 r={{me.radius}} fill=forestGreen></circle>
+	{{#if me}}
+		<circle cx=0 cy=0 r={{radiusFor me}} fill=forestGreen></circle>
+	{{/if}}
 </svg>
 </body>

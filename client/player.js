@@ -49,4 +49,20 @@ function eatWhenPossible(player) {
 			myVelocity *= 0.95
 		}
 	})
+
+	//Eat other players
+	Players.find({
+		_id: {$ne: player._id},
+		points: {$lt: player.points},
+		x: {$gte: player.x-radius, $lte: player.x+radius},
+		y: {$gte: player.y-radius, $lte: player.y+radius},
+		gameOver: {$ne: true}
+	}).forEach(function(otherPlayer) {
+		if (Math.hypot(otherPlayer.x-player.x, otherPlayer.y-player.y) < (radius - otherPlayer.points - 10)) {
+			Players.update(otherPlayer._id, {$set: {gameOver: true}})
+			Players.update(player._id, {$inc: {points: otherPlayer.points+1}})
+			myVelocity *= 0.95
+			console.log('eat another player')
+		}
+	})
 }

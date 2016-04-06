@@ -11,7 +11,10 @@ Template.body.helpers({
     },
 
 	otherPlayers() {
-		return Players.find({_id: {$not: myPlayerId.get()} })
+		return Players.find({
+			_id: {$not: myPlayerId.get()},
+			gameOver: false
+		})
 	},
 
 	radiusFor(player) {

@@ -8,6 +8,14 @@ Tracker.autorun(function() {
 		)
 })
 
+Tracker.autorun(function() {
+	const me = Players.findOne(myPlayerId.get())
+	if (me != undefined) {
+		saveMyPosition(me)
+		eatWhenPossible(me)
+	}
+})
+
 // Movement
 var myVelocity = 1.5
 export const direction = [0,0]
@@ -23,10 +31,25 @@ window.requestAnimationFrame(function updateMyPosition() {
 	window.requestAnimationFrame(updateMyPosition)
 })
 
-Tracker.autorun(function() {
-	const me = Players.findOne(myPlayerId.get())
-	if (me != undefined) {
-		myPosition[0] = me.x
-		myPosition[1] = me.y
-	}
-})
+function saveMyPosition(player) {
+	myPosition[0] = player.x
+	myPosition[1] = player.y
+}
+
+// Eating behavior
+function eatWhenPossible(player) {
+	const radius = player.points+10
+
+	// Eat food
+	Food.find({
+		x: {$gte: player.x-radius, $lte: player.x+radius},
+		y: {$gte: player.y-radius, $lte: player.y+radius}
+	}).forEach(function(pieceOfFood) {
+		if (Math.hypot(pieceOfFood.x-player.x, pieceOfFood.y-player.y) < (radius - 5)) {
+			Food.remove(pieceOfFood._id)
+			Food.insert(randomLocation())
+			Players.update(player._id, {$inc: {points: 1}})
+			myVelocity *= 0.95
+		}
+	})
+}

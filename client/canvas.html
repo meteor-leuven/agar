@@ -4,15 +4,17 @@
 
 <body>
 <svg viewBox="-200 -200 400 400">
-	{{#each food}}
-	    <circle cx={{x}} cy={{y}} r=5 fill=forestgreen></circle>
-	{{/each}}
+    <g transform="translate({{invert me.x}} {{invert me.y}})">
+		{{#each food}}
+		    <circle cx={{x}} cy={{y}} r=5 fill=forestgreen></circle>
+		{{/each}}
 
-	{{#each otherPlayers}}
-	    <circle cx={{x}} cy={{y}} r={{radius}} fill=orange></circle>
-	{{/each}}
+		{{#each otherPlayers}}
+		    <circle cx={{x}} cy={{y}} r={{radius}} fill=orange></circle>
+		{{/each}}
+	</g>
 
 	{{! Myself}}
-	<circle cx=0 cy=0 r=10 fill=lightblue></circle>
+	<circle cx=0 cy=0 r={{me.radius}} fill=lightblue></circle>
 </svg>
 </body>
